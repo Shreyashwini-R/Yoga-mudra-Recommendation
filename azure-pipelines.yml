@@ -1,0 +1,18 @@
+{
+    "version": "1.0",
+    "defaultLocale": "en",
+    "jobs": [
+        {
+            "jobType": "BatchConversion",
+            "templateId": "ConvertToDocker"
+        }
+    ],
+    "variables": {
+        "PYTHON_VERSION": "3.10",
+        "FLASK_ENV": "production",
+        "PORT": "5000"
+    },
+    "buildProvider": "github",
+    "deploymentUrl": "",
+    "buildUrl": ""
+}

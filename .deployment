@@ -1,0 +1,9 @@
+# Azure deployment configuration for Yoga Mudra app
+# This file is used by Azure App Service to configure the container deployment
+
+[General]
+PROJECT = app.py
+
+[Azure]
+PYTHON_VERSION = 3.10
+PYTHON_FRAMEWORK = flask

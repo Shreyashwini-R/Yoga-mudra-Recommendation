@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoga Asana & Mudra Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .results-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result-item h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .confidence {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+        
+        .info-text {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #c62828;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #2e7d32;
+        }
+        
+        .mudra-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .mudra-section h4 {
+            color: #764ba2;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .mudra-list {
+            list-style: none;
+        }
+        
+        .mudra-list li {
+            background: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .mudra-list li:hover {
+            background: #e0e0e0;
+        }
+        
+        .mudra-list li strong {
+            color: #764ba2;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧘 Yoga Asana & Mudra Predictor</h1>
+            <p>Discover the perfect yoga practice with mudra recommendations</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="card input-section">
+                <h2>Find Your Asana</h2>
+                <div class="form-group">
+                    <label for="benefits-input">What benefits are you looking for?</label>
+                    <textarea id="benefits-input" placeholder="e.g., I want to improve flexibility and reduce back pain, increase energy and mental clarity, relieve stress and anxiety..."></textarea>
+                </div>
+                <button onclick="predictAsana()">Predict Asana</button>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing your needs...</p>
+                </div>
+            </div>
+            
+            <div class="card results-section">
+                <h2>Recommended Asana</h2>
+                <div id="results"></div>
+            </div>
+        </div>
+        
+        <div class="card full-width">
+            <h2>About Mudras</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🔮 What are Mudras?</h3>
+                    <p>Hand gestures that direct the flow of energy in your body to support your yoga practice and meditation.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Benefits</h3>
+                    <p>Each mudra works with specific chakras and elements to enhance physical, mental, and spiritual well-being.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🧘 Customized</h3>
+                    <p>Our AI recommends mudras that perfectly complement your chosen yoga asana and health goals.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function predictAsana() {
+            const benefitsInput = document.getElementById('benefits-input').value.trim();
+            const resultsDiv = document.getElementById('results');
+            const loading = document.getElementById('loading');
+            
+            if (!benefitsInput) {
+                resultsDiv.innerHTML = '<div class="error">Please enter your health benefits or goals.</div>';
+                return;
+            }
+            
+            loading.style.display = 'block';
+            resultsDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        benefits: benefitsInput
+                    })
+                });
+                
+                const data = await response.json();
+                loading.style.display = 'none';
+                
+                if (!response.ok) {
+                    resultsDiv.innerHTML = `<div class="error">Error: ${data.error || 'Failed to predict'}</div>`;
+                    return;
+                }
+                
+                displayResults(data);
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            let html = '<div class="success">✓ Prediction successful!</div>';
+            
+            // Asana Information
+            html += `
+                <div class="result-item">
+                    <h3>${data.asana}</h3>
+                    <span class="confidence">Confidence: ${(data.confidence * 100).toFixed(1)}%</span>
+                    ${data.level ? `<div class="info-text"><strong>Level:</strong> ${data.level}</div>` : ''}
+                    ${data.description ? `<div class="info-text"><strong>Description:</strong> ${data.description}</div>` : ''}
+                    ${data.benefits ? `<div class="info-text"><strong>Benefits:</strong> ${data.benefits}</div>` : ''}
+                    ${data.contraindications ? `<div class="info-text"><strong>Contraindications:</strong> ${data.contraindications}</div>` : ''}
+                </div>
+            `;
+            
+            // Mudra Recommendations
+            if (data.mudra_recommendations && data.mudra_recommendations.length > 0) {
+                html += '<div class="mudra-section">';
+                html += '<h4>🔮 Recommended Mudras</h4>';
+                html += '<ul class="mudra-list">';
+                
+                data.mudra_recommendations.forEach(mudra => {
+                    const benefits = mudra.benefits.slice(0, 2).join(', ');
+                    html += `
+                        <li>
+                            <strong>${mudra.name}</strong>
+                            <div style="font-size: 0.9em; color: #666;">
+                                ${mudra.english_name ? `<div>${mudra.english_name}</div>` : ''}
+                                <div>${mudra.duration || ''}</div>
+                                ${benefits ? `<div>${benefits}</div>` : ''}
+                            </div>
+                        </li>
+                    `;
+                });
+                
+                html += '</ul>';
+                html += '</div>';
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('benefits-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                predictAsana();
+            }
+        });
+    </script>
+</body>
+</html>
