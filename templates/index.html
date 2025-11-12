@@ -363,13 +363,12 @@
             // Asana Information
             html += `
                 <div class="result-item">
-                    <h3>${data.asana}</h3>
-                    <span class="confidence">Confidence: ${(data.confidence * 100).toFixed(1)}%</span>
-                    ${data.level ? `<div class="info-text"><strong>Level:</strong> ${data.level}</div>` : ''}
-                    ${data.description ? `<div class="info-text"><strong>Description:</strong> ${data.description}</div>` : ''}
-                    ${data.benefits ? `<div class="info-text"><strong>Benefits:</strong> ${data.benefits}</div>` : ''}
-                    ${data.contraindications ? `<div class="info-text"><strong>Contraindications:</strong> ${data.contraindications}</div>` : ''}
-                </div>
+                <h3>${data.asana}</h3>
+                ${data.level ? `<div class="info-text"><strong>Level:</strong> ${data.level}</div>` : ''}
+                ${data.description ? `<div class="info-text"><strong>Description:</strong> ${data.description}</div>` : ''}
+                ${data.benefits ? `<div class="info-text"><strong>Benefits:</strong> ${data.benefits}</div>` : ''}
+                ${data.contraindications ? `<div class="info-text"><strong>Contraindications:</strong> ${data.contraindications}</div>` : ''}
+            </div>
             `;
             
             // Mudra Recommendations
